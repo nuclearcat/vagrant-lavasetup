@@ -1,0 +1,7 @@
+---
+- name: "Install lava"
+  hosts: all
+  vars:
+    none_var: false
+  roles:
+    - lava

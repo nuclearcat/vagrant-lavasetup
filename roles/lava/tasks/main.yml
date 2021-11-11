@@ -1,0 +1,49 @@
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/debian buster stable
+    state: present
+
+- name: Update apt and install docker-ce
+  apt: update_cache=yes name={{ item }} state=latest
+  loop: [ 'docker-ce', 'docker-compose', 'python3-yaml', 'python-docker']
+
+- name: Clone a repo with separate git directory
+  ansible.builtin.git:
+    repo: https://git.lavasoftware.org/lava/pkg/docker-compose.git
+    dest: /root/lava-docker-compose
+
+- name: Install bottle python package
+  pip:
+    name: docker-compose
+    executable: pip3
+
+- name: Docker compose pull
+  command: docker-compose pull
+  args:
+    chdir: /root/lava-docker-compose
+
+- name: Docker compose build
+  command: docker-compose build
+  args:
+    chdir: /root/lava-docker-compose
+
+- name: Docker compose up
+  command: docker-compose up -d
+  args:
+    chdir: /root/lava-docker-compose
+
+
+#  community.docker.docker_compose:
+#    pull: yes
+#    build: yes
+#    state: present
+#    project_src: /root/lava-docker-compose
