@@ -1,3 +1,14 @@
+- name: Gather facts from new server
+  setup:
+    filter: ansible_default_ipv4.address
+
+- name: Save ip address
+  become: false
+  local_action:
+    module: copy
+    content: "{{ ansible_default_ipv4.address }}"
+    dest: _terms/ipaddress
+
 - name: Install required system packages
   apt: name={{ item }} state=latest update_cache=yes
   loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
