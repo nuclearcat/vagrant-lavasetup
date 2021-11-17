@@ -12,7 +12,7 @@ def createSuperUser(username, email = "", firstName = "", lastName = ""):
     invalidInputs = ["", None]
 
     password = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 16))    
-    print("LAVA Superuser password is : " + str(password))
+    print("LAVA Superuser root password is : " + str(password))
 
     if username.strip() in invalidInputs or password.strip() in invalidInputs:
         return None
