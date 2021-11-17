@@ -1,0 +1,6 @@
+README TBD
+
+Quickstart:
+1)vagrant up
+2)If no errors - check _terms directory for credentials
+3)Upload job from https://lava.readthedocs.io/en/latest/admin/basic-tutorials/device-setup/qemu/
