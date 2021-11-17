@@ -1,6 +1,6 @@
 Vagrant.configure("2") do |config|
     config.vm.define :lava do |lava|
-    lava.vm.box = "generic/debian10"
+    lava.vm.box = "generic/debian11"
     lava.vm.hostname = "lavalab.box"
     lava.vm.network "forwarded_port", guest: 80, host: 18080
     lava.trigger.before :destroy do |trigger|

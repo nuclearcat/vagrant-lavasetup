@@ -23,9 +23,10 @@
     repo: deb https://download.docker.com/linux/debian buster stable
     state: present
 
+# python-docker for debian 10
 - name: Update apt and install docker-ce
   apt: update_cache=yes name={{ item }} state=latest
-  loop: [ 'docker-ce', 'docker-compose', 'python3-yaml', 'python-docker']
+  loop: [ 'docker-ce', 'docker-compose', 'python3-yaml']
 
 - name: Clone a repo with separate git directory
   ansible.builtin.git:
@@ -36,6 +37,16 @@
   pip:
     name: docker-compose
     executable: pip3
+
+# Debian 11 docker service fails and need restart
+- name: Reload docker service (please wait!)
+  retries: 20
+  delay: 5
+  register: result
+  until: result.failed == false
+  ansible.builtin.systemd:
+    name: docker.service
+    state: restarted
 
 - name: Docker compose pull
   command: docker-compose pull
