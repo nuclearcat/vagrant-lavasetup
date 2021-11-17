@@ -41,11 +41,5 @@
   args:
     chdir: /root/lava-docker-compose
 
-# community.docker.docker_compose: doesn't work well, need to investigate
-#  community.docker.docker_compose:
-#    pull: yes
-#    build: yes
-#    state: present
-#    project_src: /root/lava-docker-compose
-
 - import_tasks: lava-secrets.yaml
+- import_tasks: lava-device-qemu0.yaml

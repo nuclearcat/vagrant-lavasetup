@@ -1,0 +1,34 @@
+- name: Add qemu device type
+  command: docker-compose exec lava-server lava-server manage device-types add qemu
+  args:
+     chdir: /root/lava-docker-compose
+
+- name: Add qemu0 device
+  command: docker-compose exec lava-server lava-server manage devices add --device-type qemu --worker worker0 qemu0
+  args:
+     chdir: /root/lava-docker-compose
+
+- name: Copy qemu template
+  ansible.builtin.copy:
+    src: files/qemu.jinja2
+    dest: /root/qemu0.jinja2
+
+- name: Copy qemu0 template to container
+  command: docker cp qemu0.jinja2 lava-docker-compose_lava-server_1:/etc/lava-server/dispatcher-config/devices/
+  args:
+     chdir: /root
+
+- name: Chown qemu0 template inside docker
+  command: docker-compose exec lava-server chown lavaserver:lavaserver /etc/lava-server/dispatcher-config/devices/qemu0.jinja2
+  args:
+     chdir: /root/lava-docker-compose
+
+- name: Set dict for qemu0
+  command: docker-compose exec lava-server lavacli devices dict set qemu0 /etc/lava-server/dispatcher-config/devices/qemu0.jinja2
+  args:
+     chdir: /root/lava-docker-compose
+
+- name: Make health unknown
+  command: docker-compose exec lava-server lava-server manage devices update --health UNKNOWN qemu0
+  args:
+     chdir: /root/lava-docker-compose
